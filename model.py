@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # --- Unified Initial Data Generation Function ---
 def generateInitialData(model: AgentModel):
 
-    max_prior = model.get_parameter("max_prior_value")
+    max_prior = model["max_prior_value"]
     # Ensure max_prior is positive, default to a small value if not.
     if max_prior <= 0:
         max_prior = 1.0
