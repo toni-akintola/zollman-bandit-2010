@@ -119,9 +119,3 @@ def constructModel() -> AgentModel:
     model.set_timestep_function(generateTimestepData)
 
     return model
-
-
-if __name__ == "__main__":
-    model = constructModel()
-    model.initialize_graph()
-
