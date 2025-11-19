@@ -24,34 +24,12 @@ def generateInitialData(model: AgentModel):
     }
 
 
-
 # --- Unified Timestep Data Generation Function ---
 def generateTimestepData(model: AgentModel):
 
     graph = model.get_graph()
 
-    num_trials = model["num_trials_per_step"]
     true_probs = model["true_probs"]
-
-    for _node, node_data in graph.nodes(data=True):
-        if node_data["a_expectation"] > node_data["b_expectation"]:
-            successes = int(np.random.binomial(num_trials, true_probs[0], size=None))
-            node_data["a_alpha"] += successes
-            node_data["a_beta"] += max(0, num_trials - successes)
-            a_denom = node_data["a_alpha"] + node_data["a_beta"]
-            node_data["a_expectation"] = (
-                node_data["a_alpha"] / a_denom if a_denom > 0 else 0
-            )
-        else:
-            successes = int(np.random.binomial(num_trials, true_probs[1], size=None))
-            node_data["b_alpha"] += successes
-            node_data["b_beta"] += max(0, num_trials - successes)
-            b_denom = node_data["b_alpha"] + node_data["b_beta"]
-            node_data["b_expectation"] = (
-                node_data["b_alpha"] / b_denom if b_denom > 0 else 0
-            )
-
-
     trials_per_experiment = model["num_trials_per_step"]
 
     node_list = list(graph.nodes(data=True))
@@ -95,9 +73,7 @@ def generateTimestepData(model: AgentModel):
         for neighbor_id in graph.neighbors(node_id):
             if neighbor_id in actions and neighbor_id in experiment_outcomes:
                 neighbor_action = actions[neighbor_id]
-                neighbor_successes, neighbor_trials = experiment_outcomes[
-                    neighbor_id
-                ]
+                neighbor_successes, neighbor_trials = experiment_outcomes[neighbor_id]
                 if neighbor_action == 0:
                     updated_s_alpha1 += neighbor_successes
                     updated_s_beta1 += neighbor_trials - neighbor_successes
@@ -111,7 +87,6 @@ def generateTimestepData(model: AgentModel):
             "s_alpha2": updated_s_alpha2,
             "s_beta2": updated_s_beta2,
         }
-
 
     for node_id, data_to_set in new_node_attributes.items():
         for key, value in data_to_set.items():
@@ -139,7 +114,6 @@ def constructModel() -> AgentModel:
         }
     )
 
-
     # Set the unified functions
     model.set_initial_data_function(generateInitialData)
     model.set_timestep_function(generateTimestepData)
@@ -150,4 +124,4 @@ def constructModel() -> AgentModel:
 if __name__ == "__main__":
     model = constructModel()
     model.initialize_graph()
-    print(model.get_graph().nodes(data=True))
+
