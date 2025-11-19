@@ -1,7 +1,7 @@
 import numpy as np
 import networkx as nx
 import random
-from emergent import AgentModel
+from emergent.main import AgentModel
 
 def generateInitialData(model: AgentModel):
     """
