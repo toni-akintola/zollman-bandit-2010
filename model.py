@@ -8,7 +8,7 @@ def generateInitialData(model: AgentModel):
     Initializes a scientist (node) with random priors.
     """
     # Retrieve max_prior_value from model parameters (default 4.0)
-    max_prior = model["max_prior_value"] if "max_prior_value" in model.parameters else 4.0
+    max_prior = model["max_prior_value"] if "max_prior_value" in model.list_parameters() else 4.0
     
     return {
         # Beta distribution parameters for Method A (0) and Method B (1)
