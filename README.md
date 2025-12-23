@@ -25,10 +25,10 @@ This variation implements an enhanced bandit model where scientists:
 ## Model Parameters
 
 - `Num Nodes`: Size of network (default: 15)
-- `true_probs_2010`: True success probabilities [methodology1, methodology2] (default: [0.3, 0.7])
-- `num_trials_per_step_2010`: Number of trials per experimental round (default: 10)
-- `max_prior_value_2010`: Maximum value for initial Beta distribution parameters (default: 4.0)
-- `graph_type`: Network structure - "complete", "cycle", or "wheel"
+- `True Probs`: True success probabilities [methodology1, methodology2] (default: [0.3, 0.7])
+- `Num Trials Per Step`: Number of trials per experimental round (default: 10)
+- `Max Prior Value`: Maximum value for initial Beta distribution parameters (default: 4.0)
+- `Graph Type`: Network structure - "complete", "cycle", or "wheel"
 
 ## Agent Attributes
 
