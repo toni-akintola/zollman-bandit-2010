@@ -33,10 +33,7 @@ This variation implements an enhanced bandit model where scientists:
 ## Agent Attributes
 
 Each scientist maintains:
-
-- `s_alpha1`, `s_beta1`: Beta distribution parameters for methodology 1
-- `s_alpha2`, `s_beta2`: Beta distribution parameters for methodology 2
-
+- `a_expectation`, `b_expectation`: Expected success rates for each methodology
 ## Key Differences from 2008 Variation
 
 - **Methodology Focus**: Two distinct research methodologies rather than A/B options
