@@ -40,3 +40,5 @@ Each scientist maintains:
 - **Learning Scope**: Agents learn from all neighbors' experiments, not just their own
 - **Parameter Structure**: Streamlined belief representation with separate methodology tracking
 - **Experimental Design**: Higher trial counts and different default probability settings
+
+**Click the 'Visualizations' tab to get started.**
