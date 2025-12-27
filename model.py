@@ -22,7 +22,7 @@ def generateInitialData(model: AgentModel):
         "alpha2": np.random.uniform(0, max_prior),
         "beta2": np.random.uniform(0, max_prior),
         # Tracking variables
-        "current_action": -1,
+        "current_action": "none",
         "last_successes": 0,
         "last_trials": 0,
     }
@@ -51,12 +51,12 @@ def generateTimestepData(model: AgentModel):
 
         # 2. Greedy Action Selection: Choose method with higher EV
         if ev1 > ev2:
-            action = 0  # Choose Method A
+            action = "a"  # Choose Method A
         else:
-            action = 1  # Choose Method B
+            action = "b"  # Choose Method B
 
         # 3. Determine objective probability based on chosen action
-        current_objective_prob = a_objective if action == 0 else b_objective
+        current_objective_prob = a_objective if action == "a" else b_objective
 
         # 4. Run Experiment (Sample from Binomial Distribution)
         successes = np.random.binomial(1, current_objective_prob)
@@ -74,7 +74,7 @@ def generateTimestepData(model: AgentModel):
 
         # Update beliefs based on OWN results
         own_action, own_successes, own_trials = step_results[node_id]
-        if own_action == 0:
+        if own_action == "a":
             node_data["alpha1"] += own_successes
             node_data["beta1"] += own_trials - own_successes
         else:
@@ -85,7 +85,7 @@ def generateTimestepData(model: AgentModel):
         for neighbor_id in graph.neighbors(node_id):
             neigh_action, neigh_successes, neigh_trials = step_results[neighbor_id]
 
-            if neigh_action == 0:
+            if neigh_action == "a":
                 node_data["alpha1"] += neigh_successes
                 node_data["beta1"] += neigh_trials - neigh_successes
             else:
