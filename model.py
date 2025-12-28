@@ -15,12 +15,25 @@ def generateInitialData(model: AgentModel):
         else 4.0
     )
 
+    # Initialize Beta distribution parameters
+    alpha1 = np.random.uniform(0, max_prior)
+    beta1 = np.random.uniform(0, max_prior)
+    alpha2 = np.random.uniform(0, max_prior)
+    beta2 = np.random.uniform(0, max_prior)
+
+    # Calculate initial expectations
+    ev1 = alpha1 / (alpha1 + beta1) if (alpha1 + beta1) > 0 else 0
+    ev2 = alpha2 / (alpha2 + beta2) if (alpha2 + beta2) > 0 else 0
+
     return {
         # Beta distribution parameters for Method A (0) and Method B (1)
-        "alpha1": np.random.uniform(0, max_prior),
-        "beta1": np.random.uniform(0, max_prior),
-        "alpha2": np.random.uniform(0, max_prior),
-        "beta2": np.random.uniform(0, max_prior),
+        "alpha1": alpha1,
+        "beta1": beta1,
+        "alpha2": alpha2,
+        "beta2": beta2,
+        # Expected values (expectations)
+        "a_expectation": ev1,
+        "b_expectation": ev2,
         # Tracking variables
         "current_action": "none",
         "last_successes": 0,
@@ -45,9 +58,9 @@ def generateTimestepData(model: AgentModel):
     step_results = {}
 
     for node_id, node_data in graph.nodes(data=True):
-        # 1. Calculate Expected Value (Mean of Beta Distribution: alpha / (alpha + beta))
-        ev1 = node_data["alpha1"] / (node_data["alpha1"] + node_data["beta1"])
-        ev2 = node_data["alpha2"] / (node_data["alpha2"] + node_data["beta2"])
+        # 1. Get Expected Values (use stored expectations for consistency)
+        ev1 = node_data["a_expectation"]
+        ev2 = node_data["b_expectation"]
 
         # 2. Greedy Action Selection: Choose method with higher EV
         if ev1 > ev2:
@@ -91,6 +104,16 @@ def generateTimestepData(model: AgentModel):
             else:
                 node_data["alpha2"] += neigh_successes
                 node_data["beta2"] += neigh_trials - neigh_successes
+
+        # Recalculate expectations after updating beliefs
+        alpha1_sum = node_data["alpha1"] + node_data["beta1"]
+        alpha2_sum = node_data["alpha2"] + node_data["beta2"]
+        node_data["a_expectation"] = (
+            node_data["alpha1"] / alpha1_sum if alpha1_sum > 0 else 0
+        )
+        node_data["b_expectation"] = (
+            node_data["alpha2"] / alpha2_sum if alpha2_sum > 0 else 0
+        )
 
     # Commit changes to the model
     model.set_graph(graph)
